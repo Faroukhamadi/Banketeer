@@ -1,3 +1,5 @@
 # Banketeer
 
 ## Client banking app
+
+---
