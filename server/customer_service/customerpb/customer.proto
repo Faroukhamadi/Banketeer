@@ -1,0 +1,21 @@
+syntax = "proto3";
+package customerpb;
+
+message Customer {
+  int32 id = 1;
+  string firstName = 2;
+  string lastName = 3;
+  string cin = 4;
+  int32 phone = 5;
+  int32 accountId = 6;
+  int32 createdAt = 7;
+  int32 updatedAt = 8;
+}
+
+message Account {
+  int32 id = 1;
+  float balance = 2;
+  string accountNumber = 3;
+  int32 createdAt = 4;
+  int32 updatedAt = 5;
+}
