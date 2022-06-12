@@ -7,4 +7,4 @@
 	<meta name="description" content="Svelte demo app" />
 </svelte:head>
 
-<h1>This is index</h1>
+<h1>Heyyy</h1>
