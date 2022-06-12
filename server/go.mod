@@ -3,19 +3,20 @@ module github.com/Faroukhamadi/Banketeer
 go 1.18
 
 require (
+	entgo.io/contrib v0.2.1-0.20220609194656-bea889a722a8
+	entgo.io/ent v0.10.2-0.20220528091257-0917701f9114
+	github.com/golang/protobuf v1.5.2
 	github.com/jackc/pgx/v4 v4.16.1
+	github.com/lib/pq v1.10.6
 	google.golang.org/grpc v1.47.0
 	google.golang.org/protobuf v1.28.0
 )
 
 require (
 	ariga.io/atlas v0.4.2 // indirect
-	entgo.io/contrib v0.2.0 // indirect
-	entgo.io/ent v0.10.2-0.20220502113020-4ac82f5bb3f0 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
 	github.com/go-openapi/inflect v0.19.0 // indirect
-	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-cmp v0.5.8 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/hashicorp/hcl/v2 v2.12.0 // indirect
@@ -38,7 +39,5 @@ require (
 	golang.org/x/sys v0.0.0-20220610221304-9f5ed59c137d // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/tools v0.1.11 // indirect
-	golang.org/x/xerrors v0.0.0-20220609144429-65e65417b02f // indirect
-	google.golang.org/genproto v0.0.0-20210303154014-9728d6b83eeb // indirect
-	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.2.0 // indirect
+	google.golang.org/genproto v0.0.0-20211208223120-3a66f561d7aa // indirect
 )
