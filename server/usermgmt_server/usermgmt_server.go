@@ -2,11 +2,13 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
-	"math/rand"
 	"net"
+	"os"
 
 	pb "github.com/Faroukhamadi/Banketeer/usermgmt"
+	"github.com/jackc/pgx/v4"
 	"google.golang.org/grpc"
 )
 
@@ -15,14 +17,12 @@ const (
 )
 
 func NewUserManagementServer() *UserManagementServer {
-	return &UserManagementServer{
-		userList: &pb.UserList{},
-	}
+	return &UserManagementServer{}
 }
 
 type UserManagementServer struct {
+	conn *pgx.Conn
 	pb.UnimplementedUserManagementServer
-	userList *pb.UserList
 }
 
 func (server *UserManagementServer) Run() error {
@@ -41,20 +41,66 @@ func (server *UserManagementServer) Run() error {
 	return s.Serve(lis)
 }
 
-func (s *UserManagementServer) CreateNewUser(ctx context.Context, in *pb.NewUser) (*pb.User, error) {
+func (server *UserManagementServer) CreateNewUser(ctx context.Context, in *pb.NewUser) (*pb.User, error) {
 	log.Printf("Received: %v", in.GetName())
-	var userId int32 = int32(rand.Intn(1000))
-	createdUser := &pb.User{Name: in.GetName(), Age: in.GetAge(), Id: userId}
-	s.userList.Users = append(s.userList.Users, createdUser)
+
+	createSql := `CREATE TABLE IF NOT EXISTS users(
+		id SERIAL PRIMARY KEY
+		name TEXT
+		age int
+	);`
+
+	_, err := server.conn.Exec(context.Background(), createSql)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Table creation failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	createdUser := &pb.User{Name: in.GetName(), Age: in.GetAge()}
+	transaction, err := server.conn.Begin(context.Background())
+	if err != nil {
+		log.Fatalf("conn.Begin failed: %v", err)
+	}
+
+	_, err = transaction.Exec(context.Background(), "INSERT INTO users(name, age) VALUES ($1, $2)", createdUser.Name, createdUser.Age)
+	if err != nil {
+		log.Fatalf("transaction execution failed: %v", err)
+	}
+
+	transaction.Commit(context.Background())
+
 	return createdUser, nil
 }
 
-func (s *UserManagementServer) GetUsers(ctx context.Context, in *pb.GetUsersParams) (*pb.UserList, error) {
-	return s.userList, nil
+func (server *UserManagementServer) GetUsers(ctx context.Context, in *pb.GetUsersParams) (*pb.UserList, error) {
+	var userList *pb.UserList = &pb.UserList{}
+	rows, err := server.conn.Query(context.Background(), "SELECT * FROM users")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		user := pb.User{}
+		err = rows.Scan(&user.Id, &user.Name, &user.Age)
+		if err != nil {
+			return nil, err
+		}
+		userList.Users = append(userList.Users, &user)
+	}
+
+	return userList, nil
 }
 
 func main() {
+	databaseUrl := "postgres://postgres:16%2F04%2F2002@localhost:5432/postgres"
+	conn, err := pgx.Connect(context.Background(), databaseUrl)
+	if err != nil {
+		log.Fatalf("unable to establish connection: %v", err)
+	}
+	defer conn.Close(context.Background())
 	var userManagementServer *UserManagementServer = NewUserManagementServer()
+	userManagementServer.conn = conn
+
 	if err := userManagementServer.Run(); err != nil {
 		log.Fatalf("failed to run server: %v", err)
 	}
