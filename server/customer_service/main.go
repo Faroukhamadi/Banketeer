@@ -22,15 +22,19 @@ var (
 	timeout = 2 * time.Second
 )
 
-var entClient *ent.Client
-
 func (*server) GetCustomer(ctx context.Context, req *customerpb.GetCustomerRequest) (*customerpb.GetCustomerResponse, error) {
 	log.Println("Customer Service - Called GetCustomer - ID:", req.Id)
+
+	client, err := ent.Open("postgres", "host=localhost port=5432 user=postgres dbname=customer_service password=faroukhamadi")
+	if err != nil {
+		log.Fatalf("failed opening connection to postgres: %v", err)
+	}
+	defer client.Close()
 
 	c, cancel := context.WithTimeout(ctx, timeout)
 	defer cancel()
 
-	customer, err := customerdb.QueryCustomer(c, entClient, int(req.Id))
+	customer, err := customerdb.QueryCustomer(c, client, int(req.Id))
 	if err != nil {
 		return nil, error_response(err)
 	}
@@ -40,10 +44,16 @@ func (*server) GetCustomer(ctx context.Context, req *customerpb.GetCustomerReque
 func (*server) GetCustomers(ctx context.Context, req *customerpb.GetCustomersRequest) (*customerpb.GetCustomersResponse, error) {
 	log.Println("Customer Service - Called GetCustomers")
 
+	client, err := ent.Open("postgres", "host=localhost port=5432 user=postgres dbname=customer_service password=faroukhamadi")
+	if err != nil {
+		log.Fatalf("failed opening connection to postgres: %v", err)
+	}
+	defer client.Close()
+
 	c, cancel := context.WithTimeout(ctx, timeout)
 	defer cancel()
 
-	customers, err := customerdb.QueryCustomers(c, entClient)
+	customers, err := customerdb.QueryCustomers(c, client)
 	if err != nil {
 		return nil, error_response(err)
 	}
@@ -62,15 +72,15 @@ func error_response(err error) error {
 func main() {
 	log.Println("Running Customer Service")
 
-	lis, err := net.Listen("tcp", "0.0.0.0.55050")
+	lis, err := net.Listen("tcp", "0.0.0.0:55050")
 	if err != nil {
 		log.Println("Customer Service - ERROR:", err.Error())
 	}
-	client, err := ent.Open("postgres", "host=localhost port=5432 user=postgres dbname=customer_service password=faroukhamadi")
-	if err != nil {
-		log.Fatalf("failed opening connection to postgres: %v", err)
-	}
-	defer client.Close()
+	// client, err := ent.Open("postgres", "host=localhost port=5432 user=postgres dbname=customer_service password=faroukhamadi")
+	// if err != nil {
+	// 	log.Fatalf("failed opening connection to postgres: %v", err)
+	// }
+	// defer client.Close()
 
 	s := grpc.NewServer()
 	customerpb.RegisterCustomerServiceServer(s, &server{})
@@ -84,8 +94,3 @@ func main() {
 	}
 
 }
-
-// HACK: don't use this since schema is already created
-// if err := client.Schema.Create(context.Background()); err != nil {
-// 	log.Fatalf("failed creating  : %v", err)
-// }
