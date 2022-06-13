@@ -1,5 +1,15 @@
 syntax = "proto3";
-package customerpb;
+package main;
+
+option go_package="./;customerpb";
+
+
+
+service CustomerService {
+  rpc GetCustomer (GetCustomerRequest) returns (GetCustomerResponse) {};
+  rpc GetCustomers (GetCustomersRequest) returns (GetCustomersResponse) {};
+}
+
 
 message Customer {
   int32 id = 1;
@@ -12,6 +22,7 @@ message Customer {
   int32 updatedAt = 8;
 }
 
+
 message Account {
   int32 id = 1;
   float balance = 2;
@@ -19,3 +30,21 @@ message Account {
   int32 createdAt = 4;
   int32 updatedAt = 5;
 }
+
+message GetCustomersRequest {
+  
+}
+
+message GetCustomersResponse {
+  repeated Customer customers = 1;
+}
+
+
+message GetCustomerRequest {
+  int32 id = 1;
+}
+
+message GetCustomerResponse {
+  Customer customer = 1;
+}
+

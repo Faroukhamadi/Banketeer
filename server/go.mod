@@ -13,6 +13,7 @@ require (
 	github.com/agext/levenshtein v1.2.1 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
 	github.com/go-openapi/inflect v0.19.0 // indirect
+	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-cmp v0.5.6 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/hashicorp/hcl/v2 v2.10.0 // indirect
@@ -20,5 +21,8 @@ require (
 	github.com/stretchr/testify v1.7.1 // indirect
 	github.com/zclconf/go-cty v1.8.0 // indirect
 	golang.org/x/mod v0.5.1 // indirect
+	golang.org/x/net v0.0.0-20220607020251-c690dde0001d // indirect
+	golang.org/x/sys v0.0.0-20220610221304-9f5ed59c137d // indirect
 	golang.org/x/text v0.3.7 // indirect
+	google.golang.org/protobuf v1.28.0 // indirect
 )
