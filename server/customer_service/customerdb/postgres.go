@@ -26,10 +26,10 @@ func CreateCustomer(ctx context.Context, client *ent.Client) (*ent.Customer, err
 	return customer, nil
 }
 
-func QueryCustomer(ctx context.Context, client *ent.Client) (*ent.Customer, error) {
+func QueryCustomer(ctx context.Context, client *ent.Client, Id int) (*ent.Customer, error) {
 	customer, err := client.Customer.
 		Query().
-		Where(customer.ID(1)).
+		Where(customer.ID(Id)).
 		// `Only` fails if no customer found,
 		// or more than 1 customer returned.
 		Only(ctx)
@@ -40,13 +40,11 @@ func QueryCustomer(ctx context.Context, client *ent.Client) (*ent.Customer, erro
 	return customer, nil
 }
 
-// func main() {
-// 	client, err := ent.Open("postgres", "host=localhost port=5432 user=postgres dbname=customer_service password=faroukhamadi")
-// 	if err != nil {
-// 		log.Fatalf("failed opening connection to postgres: %v", err)
-// 	}
-// 	defer client.Close()
-// 	if err := client.Schema.Create(context.Background()); err != nil {
-// 		log.Fatalf("failed creating  : %v", err)
-// 	}
-// }
+func QueryCustomers(ctx context.Context, client *ent.Client) ([]*ent.Customer, error) {
+	customers, err := client.Customer.Query().All(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed querying customers: %w", err)
+	}
+	log.Println("customers returned: ", customers)
+	return customers, nil
+}

@@ -6,6 +6,8 @@ require (
 	entgo.io/ent v0.10.2-0.20220528091257-0917701f9114
 	github.com/joho/godotenv v1.4.0
 	github.com/lib/pq v1.10.5
+	google.golang.org/grpc v1.47.0
+	google.golang.org/protobuf v1.28.0
 )
 
 require (
@@ -24,5 +26,5 @@ require (
 	golang.org/x/net v0.0.0-20220607020251-c690dde0001d // indirect
 	golang.org/x/sys v0.0.0-20220610221304-9f5ed59c137d // indirect
 	golang.org/x/text v0.3.7 // indirect
-	google.golang.org/protobuf v1.28.0 // indirect
+	google.golang.org/genproto v0.0.0-20200526211855-cb27e3aa2013 // indirect
 )
