@@ -76,11 +76,6 @@ func main() {
 	if err != nil {
 		log.Println("Customer Service - ERROR:", err.Error())
 	}
-	// client, err := ent.Open("postgres", "host=localhost port=5432 user=postgres dbname=customer_service password=faroukhamadi")
-	// if err != nil {
-	// 	log.Fatalf("failed opening connection to postgres: %v", err)
-	// }
-	// defer client.Close()
 
 	s := grpc.NewServer()
 	customerpb.RegisterCustomerServiceServer(s, &server{})
