@@ -6,8 +6,6 @@ import Header from '$lib/Header.svelte';
 
 <Header />
 
-<main>
 	<slot />
-</main>
 
 <Footer />
