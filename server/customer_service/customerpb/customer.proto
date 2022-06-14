@@ -3,8 +3,6 @@ package main;
 
 option go_package="./;customerpb";
 
-
-
 service CustomerService {
   rpc GetCustomer (GetCustomerRequest) returns (GetCustomerResponse) {};
   rpc GetCustomers (GetCustomersRequest) returns (GetCustomersResponse) {};
@@ -18,8 +16,8 @@ message Customer {
   string cin = 4;
   int32 phone = 5;
   int32 accountId = 6;
-  int32 createdAt = 7;
-  int32 updatedAt = 8;
+  string createdAt = 7;
+  string updatedAt = 8;
 }
 
 
@@ -27,8 +25,8 @@ message Account {
   int32 id = 1;
   float balance = 2;
   string accountNumber = 3;
-  int32 createdAt = 4;
-  int32 updatedAt = 5;
+  string createdAt = 4;
+  string updatedAt = 5;
 }
 
 message GetCustomersRequest {

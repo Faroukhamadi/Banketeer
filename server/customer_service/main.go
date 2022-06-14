@@ -22,6 +22,11 @@ var (
 	timeout = 2 * time.Second
 )
 
+func error_response(err error) error {
+	log.Println("Customer Service - ERROR:", err.Error())
+	return status.Error(codes.Internal, err.Error())
+}
+
 func (*server) GetCustomer(ctx context.Context, req *customerpb.GetCustomerRequest) (*customerpb.GetCustomerResponse, error) {
 	log.Println("Customer Service - Called GetCustomer - ID:", req.Id)
 
@@ -64,11 +69,8 @@ func (*server) GetCustomers(ctx context.Context, req *customerpb.GetCustomersReq
 	return &res, nil
 }
 
-func error_response(err error) error {
-	log.Println("Customer Service - ERROR:", err.Error())
-	return status.Error(codes.Internal, err.Error())
-}
-
+// if something is broken, it's because I've regenerated protobuf with new types(string)
+// Fix main so that we only initialize client once
 func main() {
 	log.Println("Running Customer Service")
 
@@ -83,7 +85,6 @@ func main() {
 	log.Printf("Server started at %v", lis.Addr().String())
 
 	err = s.Serve(lis)
-
 	if err != nil {
 		log.Println("Customer Service - ERROR:", err.Error())
 	}
