@@ -1,90 +1,90 @@
-// package main
+package main
 
-// import (
-// 	"context"
-// 	"log"
-// 	"net"
-// 	"time"
+import (
+	"context"
+	"log"
+	"net"
+	"time"
 
-// 	"github.com/Faroukhamadi/Banketeer/transaction_service/transactiondb"
-// 	"github.com/Faroukhamadi/Banketeer/transaction_service/transactiondb/ent"
-// 	"github.com/Faroukhamadi/Banketeer/transaction_service/transactionpb"
-// 	"google.golang.org/grpc"
-// 	"google.golang.org/grpc/codes"
-// 	"google.golang.org/grpc/status"
-// )
+	"github.com/Faroukhamadi/Banketeer/transaction_service/transactiondb"
+	"github.com/Faroukhamadi/Banketeer/transaction_service/transactiondb/ent"
+	"github.com/Faroukhamadi/Banketeer/transaction_service/transactionpb"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+)
 
-// type server struct {
-// 	transactionpb.UnimplementedTellerServiceServer
-// }
+type server struct {
+	transactionpb.UnimplementedTransactionServiceServer
+}
 
-// var (
-// 	timeout = 2 * time.Second
-// )
+var (
+	timeout = 2 * time.Second
+)
 
-// func error_response(err error) error {
-// 	log.Println("Teller Service - ERROR:", err.Error())
-// 	return status.Error(codes.Internal, err.Error())
-// }
+func error_response(err error) error {
+	log.Println("Transaction Service - ERROR:", err.Error())
+	return status.Error(codes.Internal, err.Error())
+}
 
-// func (*server) GetTeller(ctx context.Context, req *transactionpb.GetTellerRequest) (*transactionpb.GetTellerResponse, error) {
-// 	log.Println("Teller Service - Called GetTeller - ID: ", req.Id)
+func (*server) GetTransaction(ctx context.Context, req *transactionpb.GetTransactionRequest) (*transactionpb.GetTransactionResponse, error) {
+	log.Println("Transaction Service - Called GetTransaction - ID: ", req.Id)
 
-// 	client, err := ent.Open("postgres", "host=localhost port=5432 user=postgres dbname=transaction_service password=faroukhamadi")
-// 	if err != nil {
-// 		log.Fatalf("failed opening connection to postgres: %v", err)
-// 	}
-// 	defer client.Close()
+	client, err := ent.Open("postgres", "host=localhost port=5432 user=postgres dbname=transaction_service password=faroukhamadi")
+	if err != nil {
+		log.Fatalf("failed opening connection to postgres: %v", err)
+	}
+	defer client.Close()
 
-// 	c, cancel := context.WithTimeout(ctx, timeout)
-// 	defer cancel()
+	c, cancel := context.WithTimeout(ctx, timeout)
+	defer cancel()
 
-// 	teller, err := transactiondb.QueryTeller(c, client, int(req.Id))
-// 	if err != nil {
-// 		return nil, error_response(err)
-// 	}
-// 	return &transactionpb.GetTellerResponse{Teller: &transactionpb.Teller{Id: int32(teller.ID), Username: teller.Username, Password: teller.Password, Role: string(teller.Role), CreatedAt: teller.CreateTime.String(), UpdatedAt: teller.UpdateTime.String()}}, nil
-// }
+	transaction, err := transactiondb.QueryTransaction(c, client, int(req.Id))
+	if err != nil {
+		return nil, error_response(err)
+	}
+	return &transactionpb.GetTransactionResponse{Transaction: &transactionpb.Transaction{Id: int32(transaction.ID), SenderAccountId: int32(transaction.SenderAccountId), ReceiverAccountId: int32(transaction.ReceiverAccountId), TellerId: int32(transaction.TellerId), CreatedAt: transaction.CreateTime.String(), UpdatedAt: transaction.UpdateTime.String()}}, nil
+}
 
-// func (*server) GetTellers(ctx context.Context, req *transactionpb.GetTellersRequest) (*transactionpb.GetTellersResponse, error) {
-// 	log.Println("Teller Service - Called GetTellers")
+func (*server) GetTransactions(ctx context.Context, req *transactionpb.GetTransactionsRequest) (*transactionpb.GetTransactionsResponse, error) {
+	log.Println("Transaction Service - Called GetTransactions")
 
-// 	client, err := ent.Open("postgres", "host=localhost port=5432 user=postgres dbname=transaction_service password=faroukhamadi")
-// 	if err != nil {
-// 		log.Fatalf("failed opening connection to postgres: %v", err)
-// 	}
-// 	defer client.Close()
+	client, err := ent.Open("postgres", "host=localhost port=5432 user=postgres dbname=transaction_service password=faroukhamadi")
+	if err != nil {
+		log.Fatalf("failed opening connection to postgres: %v", err)
+	}
+	defer client.Close()
 
-// 	c, cancel := context.WithTimeout(ctx, timeout)
-// 	defer cancel()
+	c, cancel := context.WithTimeout(ctx, timeout)
+	defer cancel()
 
-// 	tellers, err := transactiondb.QueryTellers(c, client)
-// 	if err != nil {
-// 		return nil, error_response(err)
-// 	}
-// 	var res transactionpb.GetTellersResponse
-// 	for _, teller := range tellers {
-// 		res.Tellers = append(res.Tellers, &transactionpb.Teller{Id: int32(teller.ID), Username: teller.Username, Password: teller.Password, Role: string(teller.Role), CreatedAt: teller.CreateTime.String(), UpdatedAt: teller.UpdateTime.String()})
-// 	}
-// 	return &res, nil
-// }
+	transactions, err := transactiondb.QueryTransactions(c, client)
+	if err != nil {
+		return nil, error_response(err)
+	}
+	var res transactionpb.GetTransactionsResponse
+	for _, transaction := range transactions {
+		res.Transactions = append(res.Transactions, &transactionpb.Transaction{Id: int32(transaction.ID), SenderAccountId: int32(transaction.SenderAccountId), ReceiverAccountId: int32(transaction.ReceiverAccountId), TellerId: int32(transaction.TellerId), CreatedAt: transaction.CreateTime.String(), UpdatedAt: transaction.UpdateTime.String()})
+	}
+	return &res, nil
+}
 
-// // Fix main so that we only initialize client once
-// func main() {
-// 	log.Println("Running Teller Service")
+// Fix main so that we only initialize client once
+func main() {
+	log.Println("Running Transaction Service")
 
-// 	lis, err := net.Listen("tcp", "0.0.0.0:55051")
-// 	if err != nil {
-// 		log.Println("Teller Service - ERROR:", err.Error())
-// 	}
+	lis, err := net.Listen("tcp", "0.0.0.0:55052")
+	if err != nil {
+		log.Println("Transaction Service - ERROR:", err.Error())
+	}
 
-// 	s := grpc.NewServer()
-// 	transactionpb.RegisterTellerServiceServer(s, &server{})
+	s := grpc.NewServer()
+	transactionpb.RegisterTransactionServiceServer(s, &server{})
 
-// 	log.Printf("Server started at %v", lis.Addr().String())
+	log.Printf("Server started at %v", lis.Addr().String())
 
-// 	err = s.Serve(lis)
-// 	if err != nil {
-// 		log.Println("Teller Service - ERROR:", err.Error())
-// 	}
-// }
+	err = s.Serve(lis)
+	if err != nil {
+		log.Println("Transaction Service - ERROR:", err.Error())
+	}
+}
