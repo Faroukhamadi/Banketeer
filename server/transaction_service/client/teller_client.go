@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-type tellerClient struct {
+type TellerClient struct {
 }
 
 var (
@@ -37,7 +37,7 @@ func prepareTellerGrpcClient(c *context.Context) error {
 	return nil
 }
 
-func (tc *tellerClient) GetTeller(c *context.Context, id int) (*tellerpb.GetTellerResponse, error) {
+func (tc *TellerClient) GetTeller(c *context.Context, id int) (*tellerpb.GetTellerResponse, error) {
 	if err := prepareTellerGrpcClient(c); err != nil {
 		return nil, err
 	}
