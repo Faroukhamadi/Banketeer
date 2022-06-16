@@ -1,19 +1,3 @@
-# fix this if new one doesn't work
-# FROM node:17 AS builder
-# WORKDIR /app
-# COPY . .
-# RUN npm install && npm run-script build
-
-# FROM nginx:alpine
-# WORKDIR /etc/nginx/conf.d
-# RUN rm -f default.conf
-# COPY ./nginx /etc/nginx/conf.d
-# WORKDIR /usr/share/nginx/html
-# RUN rm -rf ./*
-# RUN ls -l /app
-# COPY --from=builder /app/package.json /app/build ./
-# ENTRYPOINT ["nginx", "-g", "daemon off;"]
-
 FROM node:17
 WORKDIR /app
 COPY . .
