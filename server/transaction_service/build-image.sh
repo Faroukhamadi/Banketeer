@@ -1,3 +1,3 @@
 docker rmi faroukhamadi/transaction -f
-docker build --platform=linux/amd64 . -t faroukhamadi/transaction:latest
-docker push faroukhamadi/transaction:latest
+docker build --platform=linux/amd64 . -t faroukhamadi/transaction
+docker push faroukhamadi/transaction

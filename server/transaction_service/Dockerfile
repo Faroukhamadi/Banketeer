@@ -5,7 +5,7 @@ RUN apk update && apk add git
 
 WORKDIR /go/src/app
 COPY . .
-RUN go mod init
+RUN go mod init github.com/Faroukhamadi/Banketeer
 RUN go mod tidy
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o /go/bin/app .
 
