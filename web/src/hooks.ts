@@ -1,6 +1,10 @@
 import type { Handle } from '@sveltejs/kit';
 import * as cookie from 'cookie';
 
+process.on('SIGINT', () => process.exit())
+process.on('SIGTERM', () => process.exit())
+
+
 export const handle: Handle = async ({ event, resolve }) => {
 	const cookies = cookie.parse(event.request.headers.get('cookie') || '');
 	event.locals.userid = cookies['userid'] || crypto.randomUUID();
