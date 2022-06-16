@@ -8,21 +8,24 @@ networks:
 services:
   banketeer-customer-envoy:
     container_name: "customer-envoy"
-    image: "faroukhamadi/customer:local"
+    image: "faroukhamadi/customer"
+    # image: "faroukhamadi/customer:local"
     networks:
       - banketeer-net
     ports:
       - "8000:8000"
   banketeer-teller-envoy:
     container_name: "teller-envoy"
-    image: "faroukhamadi/teller:local"
+    image: "faroukhamadi/teller"
+    # image: "faroukhamadi/teller:local"
     networks:
       - banketeer-net
     ports:
       - "8001:8001"
   banketeer-transaction-envoy:
     container_name: "transaction-envoy"
-    image: "faroukhamadi/tranasction:local"
+    image: "faroukhamadi/transaction"
+    # image: "faroukhamadi/transaction:local"
     networks:
       - banketeer-net
     ports:

@@ -1,0 +1,41 @@
+
+syntax = "proto3";
+package main;
+
+option go_package="./;transactionpb";
+
+
+service TransactionService {
+  rpc GetTransaction (GetTransactionRequest) returns (GetTransactionResponse) {};
+  rpc GetTransactions (GetTransactionsRequest) returns (GetTransactionsResponse) {};
+}
+
+
+message Transaction {
+  int32 id = 1;
+  int32 senderAccountId = 2;
+  int32 receiverAccountId = 3;
+  int32 tellerId = 4;
+  int32 accountId = 5;
+  string createdAt = 6;
+  string updatedAt = 7;
+}
+
+
+message GetTransactionsRequest {
+  
+}
+
+message GetTransactionsResponse {
+  repeated Transaction Transactions = 1;
+}
+
+
+message GetTransactionRequest {
+  int32 id = 1;
+}
+
+message GetTransactionResponse {
+  Transaction Transaction = 1;
+}
+

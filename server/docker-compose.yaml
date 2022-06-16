@@ -89,6 +89,7 @@ services:
 volumes:
   postgres:
 
+
 networks:
   banketeer-net:
     external: true

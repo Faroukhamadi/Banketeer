@@ -1,0 +1,49 @@
+
+syntax = "proto3";
+package main;
+
+option go_package="./;customerpb";
+
+service CustomerService {
+  rpc GetCustomer (GetCustomerRequest) returns (GetCustomerResponse) {};
+  rpc GetCustomers (GetCustomersRequest) returns (GetCustomersResponse) {};
+}
+
+
+message Customer {
+  int32 id = 1;
+  string firstName = 2;
+  string lastName = 3;
+  string cin = 4;
+  int32 phone = 5;
+  int32 accountId = 6;
+  string createdAt = 7;
+  string updatedAt = 8;
+}
+
+
+message Account {
+  int32 id = 1;
+  float balance = 2;
+  string accountNumber = 3;
+  string createdAt = 4;
+  string updatedAt = 5;
+}
+
+message GetCustomersRequest {
+  
+}
+
+message GetCustomersResponse {
+  repeated Customer customers = 1;
+}
+
+
+message GetCustomerRequest {
+  int32 id = 1;
+}
+
+message GetCustomerResponse {
+  Customer customer = 1;
+}
+

@@ -1,0 +1,40 @@
+
+syntax = "proto3";
+package main;
+
+option go_package="./;tellerpb";
+
+
+service TellerService {
+  rpc GetTeller (GetTellerRequest) returns (GetTellerResponse) {};
+  rpc GetTellers (GetTellersRequest) returns (GetTellersResponse) {};
+}
+
+
+message Teller {
+  int32 id = 1;
+  string username = 2;
+  string password = 3;
+  string role = 4;
+  string createdAt = 5;
+  string updatedAt = 6;
+}
+
+
+message GetTellersRequest {
+  
+}
+
+message GetTellersResponse {
+  repeated Teller Tellers = 1;
+}
+
+
+message GetTellerRequest {
+  int32 id = 1;
+}
+
+message GetTellerResponse {
+  Teller Teller = 1;
+}
+
