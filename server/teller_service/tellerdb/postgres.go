@@ -7,6 +7,7 @@ import (
 
 	"github.com/Faroukhamadi/Banketeer/teller_service/tellerdb/ent"
 	"github.com/Faroukhamadi/Banketeer/teller_service/tellerdb/ent/teller"
+	_ "github.com/lib/pq"
 )
 
 func CreateTeller(ctx context.Context, client *ent.Client) (*ent.Teller, error) {

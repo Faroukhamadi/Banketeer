@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
+version: "3"
+
+networks:
+  banketeer-net:
+    external: true
+
+services:
+  banketeer-customer-envoy:
+    container_name: "customer-envoy"
+    image: "faroukhamadi/customer:local"
+    networks:
+      - banketeer-net
+    ports:
+      - "8000:8000"
+  banketeer-teller-envoy:
+    container_name: "teller-envoy"
+    image: "faroukhamadi/teller:local"
+    networks:
+      - banketeer-net
+    ports:
+      - "8001:8001"
+  banketeer-transaction-envoy:
+    container_name: "transaction-envoy"
+    image: "faroukhamadi/tranasction:local"
+    networks:
+      - banketeer-net
+    ports:
+      - "8002:8002"
+  banketeer-ui:
+    container_name: "ui"
+    # reset this after implementing ui
+    # image: "faroukhamadi/banketeer-ui:latest"
+    image: uid4oe/alva-ui:latest
+    networks:
+      - banketeer-net
+    ports:
+      - 3000:80
+  postgres:
+    container_name: "postgres"
+    image: "postgres:latest"
+    hostname: postgres
+    user: postgres
+    restart: always
+    volumes:
+      - postgres:/var/lib/postgresql/data
+      - ./all.sql:/docker-entrypoint-initdb.d/create_tables.sql
+    networks:
+      - banketeer-net
+    command: "postgres"
+    ports:
+      - "5432:5432"
+volumes:
+  postgres:

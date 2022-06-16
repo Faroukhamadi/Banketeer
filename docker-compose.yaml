@@ -1,0 +1,94 @@
+# customize this file
+version: "3"
+
+services:
+  banketeer-ui:
+    container_name: "ui"
+    image: faroukhamadi/banketeer-ui:latest
+    networks:
+      - banketeer-net
+    ports:
+      - 3000:80
+  banketeer-customer:
+    container_name: "customer"
+    image: faroukhamadi/customer:latest
+    networks:
+      - banketeer-net
+    ports:
+      - 55050:55050
+    command: /main
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    restart: always
+  banketeer-customer-envoy:
+    container_name: "customer-envoy"
+    image: faroukhamadi/customer-envoy:latest
+    networks:
+      - banketeer-net
+    ports:
+      - "8000:8000"
+  banketeer-teller:
+    container_name: "teller"
+    image: faroukhamadi/teller:latest
+    networks:
+      - banketeer-net
+    ports:
+      - 55051:55051
+    command: /main
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    restart: always
+  banketeer-teller-envoy:
+    container_name: "teller-envoy"
+    image: faroukhamadi/teller-envoy:latest
+    networks:
+      - banketeer-net
+    ports:
+      - "8001:8001"
+  banketeer-transaction:
+    container_name: "transaction"
+    image: faroukhamadi/transaction:latest
+    networks:
+      - banketeer-net
+    ports:
+      - 55052:55052
+    command: /main
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    restart: always
+  banketeer-transaction-envoy:
+    container_name: "transaction-envoy"
+    image: faroukhamadi/transaction-envoy:latest
+    networks:
+      - banketeer-net
+    ports:
+      - "8002:8002"
+  postgres:
+    container_name: "postgres"
+    image: postgres:latest
+    hostname: postgres
+    user: postgres
+    restart: always
+    volumes:
+      - postgres:/var/lib/postgresql/data
+      - ./all.sql:/docker-entrypoint-initdb.d/create_tables.sql
+    env_file:
+      - .env
+    networks:
+      - banketeer-net
+    command: "postgres"
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres:
+
+networks:
+  banketeer-net:
+    external: true
