@@ -1,6 +1,8 @@
 cd src/grpc/customerpb
-protoc -I=. customer.proto --grpc-web_out=import_style=typescript,mode=grpcwebtext:.
+protoc -I=. customer.proto --js_out=import_style=commonjs,binary:. --grpc-web_out=import_style=typescript,mode=grpcweb:.
+
 cd ../tellerpb/
-protoc -I=. teller.proto --grpc-web_out=import_style=typescript,mode=grpcwebtext:.
+protoc -I=. teller.proto --js_out=import_style=commonjs,binary:. --grpc-web_out=import_style=typescript,mode=grpcweb:.
+
 cd ../transactionpb/
-protoc -I=. transaction.proto --grpc-web_out=import_style=typescript,mode=grpcwebtext:.
+protoc -I=. transaction.proto --js_out=import_style=commonjs,binary:. --grpc-web_out=import_style=typescript,mode=grpcweb:.

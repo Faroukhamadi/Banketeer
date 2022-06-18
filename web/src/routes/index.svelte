@@ -1,8 +1,5 @@
-<script>
-	import 'carbon-components-svelte/css/white.css';
-	// implement this as soon as I get envoy proxies up and running
-	// import { CustomerServiceClient } from '../grpc/customerpb/CustomerServiceClientPb';
-	// let customerServiceClient = new CustomerServiceClient()
+<script lang="ts">
+	import Button from 'carbon-components-svelte/src/Button/Button.svelte';
 </script>
 
 <svelte:head>
@@ -11,3 +8,4 @@
 </svelte:head>
 
 <h1>Index is a big yikes</h1>
+<Button on:click={() => console.log('hello')}>Call thingie</Button>
